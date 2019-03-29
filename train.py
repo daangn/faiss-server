@@ -68,7 +68,7 @@ def main(emb_path, id_path, index_path):
     # https://github.com/facebookresearch/faiss/wiki/Guidelines-to-choose-an-index
     N, dim = embs.shape
     x = int(4 * math.sqrt(N))
-    train_count = 64 * x
+    train_count = min(64 * x, N)
 
     logging.info('emb shape: %s', embs.shape)
 
