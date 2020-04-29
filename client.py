@@ -73,6 +73,16 @@ def test(host, port, dim):
     print("total: %d" % response.count)
 
 
+@click.command('total')
+@click.option('-h', '--host', default='localhost:50051', help='server host:port')
+def total(host):
+    print("host: %s" % host)
+    channel = grpc.insecure_channel(host)
+    stub = pb2_grpc.ServerStub(channel)
+
+    response = stub.Total(pb2.EmptyRequest())
+    print("total: %d" % response.count)
+
 @click.command('import')
 @click.argument('embs-path')
 @click.argument('ids-path')
@@ -145,6 +155,7 @@ def test_search_perform(host, keys_path, count, timeout):
 
 if __name__ == '__main__':
     cli.add_command(test)
+    cli.add_command(total)
     cli.add_command(import_)
     cli.add_command(search)
     cli.add_command(search_by_key)
