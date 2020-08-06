@@ -66,6 +66,9 @@ class FaissServer(pb2_grpc.ServerServicer):
     def Total(self, request, context):
         return pb2.TotalResponse(count=self._index.ntotal())
 
+    def Dimension(self, request, context):
+        return pb2.DimensionResponse(dim=self._index.dim())
+
     def Add(self, request, context):
         logging.debug('add - id: %d', request.id)
         xb = np.expand_dims(np.array(request.embedding, dtype=np.float32), 0)

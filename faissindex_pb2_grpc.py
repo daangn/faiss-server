@@ -49,6 +49,11 @@ class ServerStub(object):
         request_serializer=faissindex__pb2.EmptyRequest.SerializeToString,
         response_deserializer=faissindex__pb2.TotalResponse.FromString,
         )
+    self.Dimension = channel.unary_unary(
+        '/faiss_index.Server/Dimension',
+        request_serializer=faissindex__pb2.EmptyRequest.SerializeToString,
+        response_deserializer=faissindex__pb2.DimensionResponse.FromString,
+        )
 
 
 class ServerServicer(object):
@@ -104,6 +109,13 @@ class ServerServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def Dimension(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_ServerServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -141,6 +153,11 @@ def add_ServerServicer_to_server(servicer, server):
           servicer.Total,
           request_deserializer=faissindex__pb2.EmptyRequest.FromString,
           response_serializer=faissindex__pb2.TotalResponse.SerializeToString,
+      ),
+      'Dimension': grpc.unary_unary_rpc_method_handler(
+          servicer.Dimension,
+          request_deserializer=faissindex__pb2.EmptyRequest.FromString,
+          response_serializer=faissindex__pb2.DimensionResponse.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(

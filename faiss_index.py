@@ -53,3 +53,6 @@ class FaissIndex:
 
     def set_nprobe(self, nprobe):
         faiss.ParameterSpace().set_index_parameter(self._index, "nprobe", nprobe)
+
+    def dim(self):
+        return self._index.d

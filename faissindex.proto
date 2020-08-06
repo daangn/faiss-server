@@ -10,6 +10,7 @@ service Server {
   rpc Restore (RestoreRequest) returns (SimpleResponse) {}
   rpc Import (ImportRequest) returns (SimpleResponse) {}
   rpc Total (EmptyRequest) returns (TotalResponse) {}
+  rpc Dimension (EmptyRequest) returns (DimensionResponse) {}
 }
 
 message AddRequest {
@@ -56,4 +57,8 @@ message SearchResponse {
 
 message TotalResponse {
   int64 count = 1;
+}
+
+message DimensionResponse {
+  int64 dim = 1;
 }
