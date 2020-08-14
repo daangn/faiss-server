@@ -13,8 +13,8 @@ class ServerTest(unittest.TestCase):
 
     @classmethod
     def _get_server(cls, remote_embedding_path=None):
-        save_path = '/data/test.index'
-        keys_path = '/data/test.key'
+        save_path = '/app/test.index'
+        keys_path = '/app/test.key'
         nprobe = 8
 
         servicer = FaissServer(0, save_path, keys_path, nprobe)
@@ -47,6 +47,16 @@ class ServerTest(unittest.TestCase):
 
     def test_search(self):
         request = pb2.SearchRequest(id=5)
+        response, metadata, code, details = self._call_method(request, 'Search')
+        self.assertEqual(code, grpc.StatusCode.OK)
+        print(response)
+
+        request = pb2.SearchRequest(id=5, key="100")
+        response, metadata, code, details = self._call_method(request, 'Search')
+        self.assertEqual(code, grpc.StatusCode.OK)
+        print(response)
+
+        request = pb2.SearchRequest(id=5, key="10227")
         response, metadata, code, details = self._call_method(request, 'Search')
         self.assertEqual(code, grpc.StatusCode.OK)
         print(response)
