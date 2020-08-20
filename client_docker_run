@@ -1,0 +1,7 @@
+#ARGS="search-by-key 100 --host=<HOST>:80"
+ARGS="${@:1}"
+docker run -it --rm \
+  -v $(pwd):/app \
+  --entrypoint python \
+  --name faiss-server-client \
+  daangn/faiss-server:v20200814 client.py $ARGS

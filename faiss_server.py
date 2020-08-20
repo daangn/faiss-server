@@ -52,7 +52,7 @@ class FaissServer(pb2_grpc.ServerServicer):
         self._index = FaissIndex(dim, save_path)
         if nprobe > 1:
             self._index.set_nprobe(nprobe)
-        self._keys, self._key_index = self._load_keys(keys_path)
+        self._keys, self._key_map = self._load_keys(keys_path)
         logging.debug('ntotal: %d', self._index.ntotal())
 
     def _load_keys(self, keys_path):
@@ -60,8 +60,8 @@ class FaissServer(pb2_grpc.ServerServicer):
             return None, None
         _, keys_path = down_if_remote_path(keys_path)
         keys = pd.read_csv(keys_path, header=None, squeeze=True, dtype=('str'))
-        key_index = pd.Index(keys)
-        return keys.values, key_index
+        key_map = {key: i for i, key in enumerate(keys)}
+        return keys.values, key_map
 
     def Total(self, request, context):
         return pb2.TotalResponse(count=self._index.ntotal())
@@ -89,9 +89,9 @@ class FaissServer(pb2_grpc.ServerServicer):
     def Search(self, request, context):
         logging.debug('search - id: %d, %s', request.id, request.key)
         if request.key:
-            if request.key not in self._key_index:
+            if request.key not in self._key_map:
                 return pb2.SearchResponse()
-            request.id = self._key_index.get_loc(request.key)
+            request.id = self._key_map[request.key]
         D, I = self._index.search_by_id(request.id, request.count)
         K = None
         if request.key:
